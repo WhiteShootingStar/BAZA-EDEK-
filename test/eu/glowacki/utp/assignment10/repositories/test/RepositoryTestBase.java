@@ -23,7 +23,13 @@ public abstract class RepositoryTestBase<TDTO extends DTOBase, TRepository exten
 		if (_repository != null) {
 			_repository.rollbackTransaction();
 		}
+		_repository.close();
+		_repository = null;
 	}
 
 	protected abstract TRepository Create();
+	
+	protected TRepository repository() {
+		return _repository;
+	}
 }

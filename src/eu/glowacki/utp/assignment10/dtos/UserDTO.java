@@ -54,4 +54,41 @@ public class UserDTO extends DTOBase {
 			_groups.remove(group);
 		}
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((_groups == null) ? 0 : _groups.hashCode());
+		result = prime * result + ((_login == null) ? 0 : _login.hashCode());
+		result = prime * result + ((_password == null) ? 0 : _password.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UserDTO other = (UserDTO) obj;
+		if (_groups == null) {
+			if (other._groups != null)
+				return false;
+		} else if (!_groups.equals(other._groups))
+			return false;
+		if (_login == null) {
+			if (other._login != null)
+				return false;
+		} else if (!_login.equals(other._login))
+			return false;
+		if (_password == null) {
+			if (other._password != null)
+				return false;
+		} else if (!_password.equals(other._password))
+			return false;
+		return true;
+	}
 }

@@ -7,18 +7,27 @@ import java.sql.SQLException;
 import eu.glowacki.utp.assignment10.dtos.DTOBase;
 
 public abstract class Repository<DTO extends DTOBase> implements IRepository<DTO> {
-	final Connection conn;
+	
+	protected final Connection con;
 
 	public Repository() {
-		conn = getConnection();
+		con = getConnection();
 	}
 
 	@Override
 	public Connection getConnection() {
 		Connection connect = null;
 		try {
-			connect = DriverManager.getConnection("pudge", "s16550", "oracle12");
-		} catch (SQLException e) {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+//			connect = DriverManager.getConnection("jdbc:oracle:thin:@db-oracle.pjwstk.edu.pl:1521:baza", "s16550",
+//					"oracle12");
+			// connect =
+			// DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:homedb","homeuser",
+			// "algebra1");
+			 connect = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe",
+			 "homeuser", "algebra1");
+
+		} catch (SQLException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -28,7 +37,7 @@ public abstract class Repository<DTO extends DTOBase> implements IRepository<DTO
 	@Override
 	public void beginTransaction() {
 		try {
-			conn.setAutoCommit(false);
+			con.setAutoCommit(false);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -39,7 +48,7 @@ public abstract class Repository<DTO extends DTOBase> implements IRepository<DTO
 	@Override
 	public void commitTransaction() {
 		try {
-			conn.commit();
+			con.commit();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -50,7 +59,8 @@ public abstract class Repository<DTO extends DTOBase> implements IRepository<DTO
 	@Override
 	public void rollbackTransaction() {
 		try {
-			conn.rollback();
+			con.rollback();
+			con.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -64,8 +74,12 @@ public abstract class Repository<DTO extends DTOBase> implements IRepository<DTO
 		return dto.hasExistingId();
 	}
 
-
-
-	
+	public void close() {
+		try {
+			con.close();
+		} catch (SQLException exception) {
+			exception.printStackTrace();
+		}
+	}
 
 }

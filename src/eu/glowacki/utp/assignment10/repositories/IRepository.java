@@ -27,4 +27,5 @@ public interface IRepository<TDTO extends DTOBase> {
 	int getCount();
 	
 	boolean exists(TDTO dto);
+	void close();
 }
